@@ -39,5 +39,3 @@ S3	bucket	cloud cabinet, --recursive flag, rb needs empty
 DynamoDB	table	key = row ID, PAY_PER_REQUEST
 SQS	queue	pull-based, delete by ReceiptHandle
 SNS	topic	push-based, publish → all subscribers
-
-Copy the whole block into your `README.md`. Want it shorter (no Quick reference) or with your session notes added in?
