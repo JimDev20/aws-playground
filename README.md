@@ -30,4 +30,14 @@ SSM = notes folder; Secrets Manager = locked safe.
 Sessions pending
 - Session 5 — IAM + STS
 - Session 6 — EventBridge + CloudWatch
+<<<<<<< HEAD
 - Session 7 — CloudFormation
+=======
+- Session 7 — CloudFormation
+Quick reference
+Service	Resource	Notes
+S3	bucket	cloud cabinet, --recursive flag, rb needs empty
+DynamoDB	table	key = row ID, PAY_PER_REQUEST
+SQS	queue	pull-based, delete by ReceiptHandle
+SNS	topic	push-based, publish → all subscribers
+>>>>>>> 6f139acda9ad8bdf3ee6374ac5e6d4a3974bd7a6 origin/main
