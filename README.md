@@ -27,17 +27,10 @@ Session 4 — SSM + Secrets Manager (done)
 SSM = notes folder; Secrets Manager = locked safe.
 - ssm put-parameter → get-parameter (SecureString needs --with-decryption) → secretsmanager create-secret → get-secret-value → update-secret.
 - Gotchas: --overwrite needed to update a param; create-secret again = ResourceExistsException (use update-secret).
+Session 5 — IAM + STS (done)
+User = badge; group = team with badges; policy = permission rules; role = hat worn temporarily. IAM = who can do what; STS = issues the hat.
+- create-user → create-group → attach-group-policy → add-user-to-group → create-role (trust-policy.json) → assume-role → get-caller-identity proves identity swap.
+- Gotchas: NoCredentials = eval $(floci env) missing in that shell; assume-role returns credentials, not a session (must export to act as role); same get-caller-identity shows root vs assumed-role.
 Sessions pending
-- Session 5 — IAM + STS
 - Session 6 — EventBridge + CloudWatch
-<<<<<<< HEAD
 - Session 7 — CloudFormation
-=======
-- Session 7 — CloudFormation
-Quick reference
-Service	Resource	Notes
-S3	bucket	cloud cabinet, --recursive flag, rb needs empty
-DynamoDB	table	key = row ID, PAY_PER_REQUEST
-SQS	queue	pull-based, delete by ReceiptHandle
-SNS	topic	push-based, publish → all subscribers
->>>>>>> 6f139acda9ad8bdf3ee6374ac5e6d4a3974bd7a6 origin/main
