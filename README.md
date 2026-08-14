@@ -30,7 +30,12 @@ SSM = notes folder; Secrets Manager = locked safe.
 Session 5 — IAM + STS (done)
 User = badge; group = team with badges; policy = permission rules; role = hat worn temporarily. IAM = who can do what; STS = issues the hat.
 - create-user → create-group → attach-group-policy → add-user-to-group → create-role (trust-policy.json) → assume-role → get-caller-identity proves identity swap.
+Session 6 — EventBridge + CloudWatch (done)
+CloudWatch = dashboards/logs; EventBridge = event switchboard (rule = route, target = where it goes).
+- put-metric-data (write) → get-metric-statistics (read; --period bucket + --statistics Sum) → create-log-group → create-log-stream → put-log-events (epoch-ms timestamp) → get-log-events.
+- events put-rule (filter on source) → events put-targets (Id + Arn) → list-targets-by-rule (prove) → put-events (fire test event).
+- SNS→SQS proof: sns subscribe (endpoint = queue ARN, not URL) → put-events → sqs receive-message shows SNS envelope wrapping the EventBridge event.
+- Gotchas: put-rule not create-rule; get-metric-statistics needs Z-suffixed ISO times; put-log-events needs epoch milliseconds + nextSequenceToken on repeat writes; Session 3's delete-queue cleanup meant re-creating orders during recovery.
 - Gotchas: NoCredentials = eval $(floci env) missing in that shell; assume-role returns credentials, not a session (must export to act as role); same get-caller-identity shows root vs assumed-role.
 Sessions pending
-- Session 6 — EventBridge + CloudWatch
 - Session 7 — CloudFormation
