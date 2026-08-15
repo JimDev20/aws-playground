@@ -1,0 +1,36 @@
+{
+    "StackResources": [
+        {
+            "StackName": "my-cf-stack",
+            "LogicalResourceId": "MyBucket",
+            "PhysicalResourceId": "my-cf-bucket",
+            "ResourceType": "AWS::S3::Bucket",
+            "Timestamp": "2026-08-15T13:48:46.974284+00:00",
+            "ResourceStatus": "CREATE_COMPLETE"
+        },
+        {
+            "StackName": "my-cf-stack",
+            "LogicalResourceId": "MyTable",
+            "PhysicalResourceId": "my-cf-table",
+            "ResourceType": "AWS::DynamoDB::Table",
+            "Timestamp": "2026-08-15T13:48:46.974828+00:00",
+            "ResourceStatus": "CREATE_COMPLETE"
+        },
+        {
+            "StackName": "my-cf-stack",
+            "LogicalResourceId": "MyQueue",
+            "PhysicalResourceId": "http://localhost:4566/000000000000/my-cf-queue",
+            "ResourceType": "AWS::SQS::Queue",
+            "Timestamp": "2026-08-15T13:48:46.974858+00:00",
+            "ResourceStatus": "CREATE_COMPLETE"
+        },
+        {
+            "StackName": "my-cf-stack",
+            "LogicalResourceId": "MyTopic",
+            "PhysicalResourceId": "arn:aws:sns:us-east-1:000000000000:order-alerts",
+            "ResourceType": "AWS::SNS::Topic",
+            "Timestamp": "2026-08-15T13:48:46.974878+00:00",
+            "ResourceStatus": "CREATE_COMPLETE"
+        }
+    ]
+}

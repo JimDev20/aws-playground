@@ -1,0 +1,146 @@
+AWS Playground — Complete Session Guide (Sessions 1–7)
+0. Environment (every terminal)
+floci start --persist .floci-data
+eval $(floci env)
+aws sts get-caller-identity
+{
+    "UserId": "000000000000",
+    "Account": "000000000000",
+    "Arn": "arn:aws:iam::000000000000:root"
+}
+Gotcha: if floci says "Container already running", just run eval $(floci env).
+Session 1 — S3 (cloud cabinet: bucket = cabinet, object = item)
+aws s3 mb s3://uncle-george-site
+aws s3 cp index.html s3://uncle-george-site/
+aws s3 ls s3://uncle-george-site
+aws s3 cp --recursive css s3://uncle-george-site/css        # folders: cp -r
+aws s3 cp data/products.json s3://uncle-george-site/data/
+aws s3 ls --recursive s3://uncle-george-site
+aws s3 cp s3://uncle-george-site/data/products.json download-test/   # download = reverse cp
+aws s3 rm s3://uncle-george-site/index.html
+aws s3 rb s3://uncle-george-site                            # FAILS: BucketNotEmpty
+aws s3 rm --recursive s3://uncle-george-site                # empty first
+aws s3 rb s3://uncle-george-site                            # succeeds
+Gotchas: --recursive is a flag, not a subcommand (s3 cp --recursive, never s3 --recursive). NoSuchBucket = typo in bucket name. Destination prefix decides where files land (truncated dst orphans files). rb needs an empty bucket.
+Session 2 — DynamoDB (table = spreadsheet, item = row, key = row's ID)
+aws dynamodb create-table --table-name products \
+  --attribute-definitions AttributeName=id,AttributeType=S \
+  --key-schema AttributeName=id,KeyType=HASH \
+  --billing-mode PAY_PER_REQUEST
+aws dynamodb put-item --table-name products \
+  --item '{"id":{"S":"french-baguette"},"name":{"S":"French Baguette"},"price":{"N":"45"}}'
+aws dynamodb get-item --table-name products --key '{"id":{"S":"french-baguette"}}'
+aws dynamodb scan --table-name products
+aws dynamodb delete-table --table-name products
+Gotchas: types are S=string, N=number. get-item needs the full key. scan reads everything (no filter).
+Session 3 — SQS + SNS (mailbox = one-to-one pull, megaphone = one-to-many push)
+aws sqs create-queue --queue-name orders        # note QueueUrl in output
+aws sqs send-message --queue-url <url> --message-body '{"order":"french-baguette","qty":2}'
+aws sqs receive-message --queue-url <url>       # get a message
+aws sqs delete-message --queue-url <url> --receipt-handle <handle>
+aws sns create-topic --name order-alerts        # note TopicArn
+aws sns publish --topic-arn <arn> --message "New order placed!"
+aws sqs delete-queue --queue-url <url>
+Gotcha: a received message has a ReceiptHandle — you MUST delete by that handle, not by the body.
+Session 4 — SSM + Secrets Manager (notes folder vs locked safe)
+aws ssm put-parameter --name /site/tax-rate --value "12" --type String
+aws ssm put-parameter --name /site/email --value "bakery@example.com" --type SecureString
+aws ssm get-parameter --name /site/email --with-decryption
+aws secretsmanager create-secret --name prod/database-url \
+  --secret-string "postgresql://admin:secret@localhost/db"
+aws secretsmanager get-secret-value --secret-id prod/database-url
+Gotchas: --overwrite needed to update an existing param. SecureString needs --with-decryption to read the real value.
+Session 5 — IAM + STS (badge = user, team = group, rules = policy, hat = role)
+aws iam create-user --user-name shop-bot
+aws iam create-group --group-name read-only-team
+aws iam attach-group-policy --group-name read-only-team \
+  --policy-arn arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess
+aws iam add-user-to-group --user-name shop-bot --group-name read-only-team
+aws iam create-role --role-name dev-role \
+  --assume-role-policy-document file://trust-policy.json
+aws sts assume-role --role-arn arn:aws:iam::000000000000:role/dev-role --role-session-name demo
+aws sts get-caller-identity
+Gotchas: assume-role returns temporary Credentials — use them (via profile/env) to act as the role; plain get-caller-identity shows root.
+Session 6 — EventBridge + CloudWatch (dashboard/logs + event switchboard)
+aws cloudwatch put-metric-data --namespace UncleGeorge --metric-name Visits --value 1
+aws cloudwatch get-metric-statistics --namespace UncleGeorge --metric-name Visits \
+  --start-time ... --end-time ... --period 60 --statistics Sum
+aws logs create-log-group --log-group-name /uncle-george/orders
+aws logs create-log-stream --log-group-name /uncle-george/orders --log-stream-name order-1
+aws logs put-log-events --log-group-name /uncle-george/orders --log-stream-name order-1 \
+  --log-events timestamp=...,message="order placed"
+aws events put-rule --name order-placed-rule --event-pattern '{"source":["uncle-george"]}'
+aws events put-targets --rule order-placed-rule --targets Id=1,Arn=<sns-topic-arn>
+Gotchas: EventBridge uses put-rule (NOT create-rule). Use --no-cli-pager / --no-paginate for clean output.
+Session 7 — CloudFormation (one file = many resources; create=full menu, update=only the new dish, delete=close kitchen)
+stack.json (the one actually used today):
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Resources": {
+    "MyBucket": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": { "BucketName": "my-cf-bucket" }
+    },
+    "MyTable": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "TableName": "my-cf-table",
+        "AttributeDefinitions": [ { "AttributeName": "id", "AttributeType": "S" } ],
+        "KeySchema": [ { "AttributeName": "id", "KeyType": "HASH" } ],
+        "BillingMode": "PAY_PER_REQUEST"
+      }
+    },
+    "MyQueue": {
+      "Type": "AWS::SQS::Queue",
+      "Properties": { "QueueName": "my-cf-queue" }
+    },
+    "MyTopic": {
+      "Type": "AWS::SNS::Topic",
+      "Properties": { "TopicName": "order-alerts" }
+    }
+  }
+}
+Workflow (today's run):
+aws cloudformation validate-template --template-body file://stack.json
+# -> {"Parameters": [], "Capabilities": [], "CapabilitiesReason": ""}
+
+aws cloudformation create-stack --stack-name my-cf-stack --template-body file://stack.json
+# -> StackId arn:aws:cloudformation:us-east-1:000000000000:stack/my-cf-stack/e618dbda-...
+
+aws cloudformation describe-stacks --stack-name my-cf-stack
+# -> "StackStatus": "CREATE_COMPLETE"
+
+aws cloudformation describe-stack-resources --stack-name my-cf-stack
+# -> MyBucket (s3), MyTable (dynamodb), MyQueue (sqs)
+
+# EDIT stack.json to add MyTopic (SNS order-alerts), then:
+aws cloudformation update-stack --stack-name my-cf-stack --template-body file://stack.json
+aws cloudformation describe-stacks --stack-name my-cf-stack
+# -> "StackStatus": "UPDATE_COMPLETE"  (bucket/table/queue untouched — the IaC payoff)
+
+aws cloudformation delete-stack --stack-name my-cf-stack
+aws cloudformation list-stacks
+# -> my-cf-stack -> DELETE_COMPLETE
+Gotchas (today's real ones):
+file:// prefix is mandatory before the path.
+The file must actually exist — No such file or directory: 'stack.json' means the file isn't in the current directory. Ours lived in jsonSample/; fix with cp jsonSample/stack.json . or use file://jsonSample/stack.json.
+cat file.json is a read — pasting JSON into chat never creates the file; you must save it with cat > stack.json << 'EOF' ... EOF (ends with EOF on its own line).
+update-stack ≠ create-stack; poll describe-stacks until _COMPLETE.
+delete-stack fails if a bucket still has data (same BucketNotEmpty rule as Session 1).
+Capstone mapping (Ecommerce → each service)
+AWS Service
+S3
+DynamoDB
+SQS + SNS
+SSM + Secrets
+IAM + STS
+EventBridge + CloudWatch
+CloudFormation
+Mental model (one-liner each)
+S3 — file cabinet
+DynamoDB — spreadsheet with labeled rows
+SQS/SNS — mailbox vs megaphone
+SSM/Secrets — notes folder vs locked safe
+IAM/STS — badges, teams, rules, temporary hats
+EventBridge/CloudWatch — switchboard + dashboards/logs
+CloudFormation — the recipe book that cooks the whole kitchen
