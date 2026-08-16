@@ -51,3 +51,7 @@ One file = many resources. create-stack = cook whole menu; update-stack = cook o
 - stack.json: MyBucket (S3), MyTable (DynamoDB, key id, PAY_PER_REQUEST), MyQueue (SQS), MyTopic (SNS).
 - validate-template → create-stack → describe-stacks (until CREATE_COMPLETE) → describe-stack-resources (prove) → edit file → update-stack (only the new dish; bucket/table/queue untouched = the IaC payoff) → delete-stack → list-stacks (DELETE_COMPLETE).
 - Gotchas: file:// prefix mandatory; the template must exist on disk (file lived in jsonSample/ — cp it or use file://jsonSample/stack.json); cat is a read — save the file with cat > stack.json << 'EOF' ... EOF; update-stack ≠ create-stack; delete-stack fails on non-empty buckets (same rule as Session 1).
+
+## Remaining sessions plan (S8–S18) — 11 sessions
+S8  — Filesystem + users + packages: ls hierarchy (/etc /var /usr),
+      chmod/chown, umask, apt/yum (install/update/remove). No floci.
