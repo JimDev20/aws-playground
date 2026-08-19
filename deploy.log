@@ -1,0 +1,6 @@
+[2026-08-19 12:04:30] === Uncle George Ecommerce Deployment ===
+[2026-08-19 12:04:30] Source directory found: Ecommerce
+[2026-08-19 12:04:30] Starting deployment...
+[2026-08-19 12:04:30] SUCCESS: Deployed to /var/www/Ecommerce
+[2026-08-19 12:04:30] Total files deployed: 126
+[2026-08-19 12:04:30] === Deployment Complete ===
