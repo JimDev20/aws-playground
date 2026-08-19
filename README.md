@@ -52,6 +52,39 @@ One file = many resources. create-stack = cook whole menu; update-stack = cook o
 - validate-template → create-stack → describe-stacks (until CREATE_COMPLETE) → describe-stack-resources (prove) → edit file → update-stack (only the new dish; bucket/table/queue untouched = the IaC payoff) → delete-stack → list-stacks (DELETE_COMPLETE).
 - Gotchas: file:// prefix mandatory; the template must exist on disk (file lived in jsonSample/ — cp it or use file://jsonSample/stack.json); cat is a read — save the file with cat > stack.json << 'EOF' ... EOF; update-stack ≠ create-stack; delete-stack fails on non-empty buckets (same rule as Session 1).
 
-## Remaining sessions plan (S8–S18) — 11 sessions
+Session 8 — Filesystem + Users + Packages (done)
+### Session 8 — Filesystem + Users + Packages (done)
+Filesystem = building layout; /etc = settings drawer, /var = mailbox that fills up,
+/usr = library shelf. Permissions = house key system (owner/group/others).
+apt = package manager (refresh → install → remove).
+- ls / → ls /etc → ls /var → ls /usr (orient on server)
+- ls -l (see permissions: -rwxrwxrwx)
+- chmod +x script.sh (make executable — 10x/day in DevOps)
+- chmod 700 .env (protect secrets — owner-only)
+- sudo apt update → sudo apt install jq → jq --version → sudo apt remove jq
+- jq parsing: jq '.' (pretty-print), jq '.[].name' (extract fields),
+  jq 'select(.cat=="Cakes")' (filter), jq 'group_by(.cat) | map({count: length})' (aggregate)
+- Applied to: deploy.sh (copy Ecommerce/ to /var/www/Ecommerce/), products.json (32 bakery products)
+- Gotchas: apt update needs sudo; nano creates files, chmod +x makes them scripts; ./script.sh runs from current directory
+Session 9 — Bash Scripting (done)
+
+### Session 9 — Bash Scripting (done)
+Variables = labeled jars; conditionals = "is the bakery open?"; loops = going through a box of photos;
+functions = named recipes; exit codes = delivery receipt (0=success, 1=failure).
+- NAME="Uncle George" (assign) → echo $NAME (print) → echo "The $NAME costs $PRICE" (interpolation)
+- if [ -f "file" ] (file exists?) → if [ -d "dir" ] (directory exists?)
+- for img in path/*; do echo $img; done (loop through files)
+- count=$((count+1)) (math in loops)
+- log() { echo "[$(date)] $1"; } (functions with timestamps)
+- command -v jq (check if tool installed) → &> /dev/null (silence output)
+- exit 0 (success) → exit 1 (failure) → if [ $? -eq 0 ] (check result)
+- Built 3 scripts: deploy-enhanced.sh (deploy with logging), resize-images.sh (batch image resize),
+  check-products.sh (validate product data)
+- Gotchas: no spaces around = in variables; $ is required to read variables; fi closes if; 
+  chmod +x needed after nano; ./ prefix to run local scripts
+What to Update in "Remaining sessions plan"
+Change S8 and S9 from pending to done:
 S8  — Filesystem + users + packages: ls hierarchy (/etc /var /usr),
-      chmod/chown, umask, apt/yum (install/update/remove). No floci.
+      chmod/chown, umask, apt/yum (install/update/remove). No floci. (done)
+S9  — Bash scripting: variables, if/for/while, functions, exit codes;
+      scripts wrapping aws CLI. (done)
