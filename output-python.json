@@ -1,0 +1,1 @@
+{"statusCode": 200, "headers": {"Content-Type": "application/json", "Access-Control-Allow-Origin": "*"}, "body": "{\"message\": \"Hello, World!\", \"input\": {\"key\": \"value\", \"name\": \"JimDev20\"}, \"runtime\": \"python3.9\"}"}
