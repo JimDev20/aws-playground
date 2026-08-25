@@ -89,8 +89,4 @@ Docker ✅, Terraform/K8s/CI-CD next · Phase 4 Prometheus+Grafana (S18).
 | Dockerfile parse error | stray text; error names exact line; nano Ctrl+K |
 | Data vanished | you ran down -v; check Mounts if unsure |
 
-## User Preferences
 
-One command at a time ("done" between); `\` multi-line; every flag explained;
-analogies always; expected output BEFORE running; full guides = problem story +
-flags + expected outputs + gotchas/skills (see session-12/13/14-recap.md).
