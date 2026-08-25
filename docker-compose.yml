@@ -1,0 +1,11 @@
+services:
+  web:
+    build: .
+    container_name: shopfast-web
+    ports:
+      - "8080:5000"
+    volumes:
+      - shopfast-data:/data
+
+volumes:
+  shopfast-data:
