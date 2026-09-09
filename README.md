@@ -58,9 +58,13 @@ Guide: `session-14-recap.md`
 
 ## Remaining Sessions
 
+S15 plan-mode guide ready (not executed): Terraform → floci, ShopFast S3+Dynamo
+mirror of `capstone1.json`; blockers noted: terraform not installed, floci
+stopped; no `.tf` files created yet.
+
 | # | Topic |
 |---|-------|
-| S15 | Terraform → floci (HCL, init/plan/apply/destroy) |
+| S15 | Terraform → floci (HCL, init/plan/apply/destroy) — planned next |
 | S16 | GitHub Actions CI/CD vs floci |
 | S17 | Kubernetes LIGHT (theory if RAM-tight) |
 | S18 | Prometheus + Grafana + CloudWatch recap |
