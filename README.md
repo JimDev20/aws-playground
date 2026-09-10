@@ -62,10 +62,16 @@ S15 plan-mode guide ready (not executed): Terraform → floci, ShopFast S3+Dynam
 mirror of `capstone1.json`; blockers noted: terraform not installed, floci
 stopped; no `.tf` files created yet.
 
+S16 plan-mode guide ready (not executed): GitHub Actions CI/CD vs floci,
+ShopFast pipeline (validate `capstone1.json` + S13 order flow + S14 docker build)
+on push; blockers noted: no `.github/workflows/` yet, hosted runners can't reach
+`http://localhost:4566` (needs `act` locally or self-hosted runner), no secrets
+configured yet.
+
 | # | Topic |
 |---|-------|
 | S15 | Terraform → floci (HCL, init/plan/apply/destroy) — planned next |
-| S16 | GitHub Actions CI/CD vs floci |
+| S16 | GitHub Actions CI/CD vs floci (validate + build ShopFast on push) — planned after S15 |
 | S17 | Kubernetes LIGHT (theory if RAM-tight) |
 | S18 | Prometheus + Grafana + CloudWatch recap |
 
