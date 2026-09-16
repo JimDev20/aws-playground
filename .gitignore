@@ -1,12 +1,49 @@
-.floci-data
-session1-7.md
-steps1-7.md
-system.md
+# Floci local emulator state (zero-cost sandbox, machine-specific)
+.floci-data/
+.floc-data/
 
-1-session.md
-1-steps.md
-
+# Practice / large local folders (nested repos, images, scratch notes)
 Ecommerce/
 Prac-ecom/
 jsonSample/
 systems/
+
+# Session notes (local guides, not portfolio source)
+session1-7.md
+steps1-7.md
+system.md
+1-session.md
+1-steps.md
+session-1-7-complete
+sessions/
+steps/
+
+# Build artifacts (regenerable)
+*.zip
+*.log
+deploy.log
+
+# Terraform (local state/plans, never commit secrets)
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+tfplan
+
+# Python / Node (regenerable)
+__pycache__/
+*.pyc
+.pytest_cache/
+node_modules/
+.venv/
+venv/
+
+# OS / editor junk
+.DS_Store
+*.swp
+*~
+
+# Local test outputs (generated during sessions)
+output-*.json
+payload.json
+payload-*.json
