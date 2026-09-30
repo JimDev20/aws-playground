@@ -47,3 +47,10 @@ venv/
 output-*.json
 payload.json
 payload-*.json
+
+# Organized local folders (connected groups, kept locally, not pushed)
+shopfast-web/
+cloudformation/
+scripts/
+lambda/
+scratch/
